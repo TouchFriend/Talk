@@ -5,14 +5,17 @@
 //  Created by TouchWorld on 2017/4/5.
 //  Copyright © 2017年 cxz. All rights reserved.
 //
+#define NJEmailRegex @"^(\\w+((-\\w+)|(\\.\\w+))*)+\\w+((-\\w+)|(\\.\\w+))*@[A-Za-z0-9]+((\\.|-)[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$"
+#define NJPwdRegex @"^[\\w\\@\\!\\#\\$\\%\\^\\&\\*\\.\\~]{8,50}$"
 #define NJRegisterPath @"data/user/register"
 #import "NJRegisterVC.h"
 #import "NJBirthdayVC.h"
 #import "NJBirthdayVCDelegate.h"
 #import "NJSexTextF.h"
-#import "AFNetworking.h"
-#import "SVProgressHUD.h"
+#import <AFNetworking.h>
+#import <SVProgressHUD.h>
 #import "NSString+NJMD5String.h"
+#import "NSString+NJRegex.h"
 @interface NJRegisterVC () <NJBirthdayVCDelegate,UIGestureRecognizerDelegate>
 /********* 性别数组 *********/
 @property(nonatomic,strong)NSArray * sexArr;
@@ -49,6 +52,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //添加手势
+    [self addGestures];
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -124,9 +129,26 @@
     
 }
 //点击注册按钮
+/*
+ 合法E-mail地址：
+ 1. 必须包含一个并且只有一个符号“@”
+ 2. 第一个字符不得是“@”或者“.”
+ 3. 不允许出现“@.”或者.@
+ 4. 结尾不得是字符“@”或者“.”
+ 5. 允许“@”前的字符中出现“＋”
+ 6. 不允许“＋”在最前面，或者“＋@”
+ */
+/*
+ 1 可以全数字
+ 2 可以全字母
+ 3 可以全特殊字符(~!@#$%^&*.)
+ 4 三种的组合
+ 5 可以是任意两种的组合
+ 6 长度6-22
+ */
 - (IBAction)registerBtnClick
 {
-    //1.判断邮箱是否为空
+    //1.1判断邮箱是否为空
     if(!self.emailTextF.text.length)
     {
         //提示
@@ -136,7 +158,17 @@
         [SVProgressHUD dismissWithDelay:1.5];
         return;
     }
-    //2.判断昵称是否为空
+    //1.2判断邮箱是否符合规范
+    if(![self.emailTextF.text isMatchesWithRegex:NJEmailRegex])
+    {
+        //提示
+        [SVProgressHUD showErrorWithStatus:@"不是一个合法的邮箱"];
+        //用户未输入ID，出现键盘
+        [self.emailTextF becomeFirstResponder];
+        [SVProgressHUD dismissWithDelay:1.5];
+        return;
+    }
+    //2判断昵称是否为空
     if(!self.nameTextF.text.length)
     {
         //提示
@@ -146,11 +178,21 @@
         [SVProgressHUD dismissWithDelay:1.5];
         return;
     }
-    //3.判断密码是否为空
+    //3.1判断密码是否为空
     if(!self.pwdTextF.text.length)
     {
         //提示
         [SVProgressHUD showErrorWithStatus:@"请输入您的密码"];
+        //用户未输入密码，出现键盘
+        [self.pwdTextF becomeFirstResponder];
+        [SVProgressHUD dismissWithDelay:1.5];
+        return;
+    }
+    //3.2判断密码是否符合规范
+    if(![self.pwdTextF.text isMatchesWithRegex:NJPwdRegex])
+    {
+        //提示
+        [SVProgressHUD showErrorWithStatus:@"不是一个合法的密码"];
         //用户未输入ID，出现键盘
         [self.pwdTextF becomeFirstResponder];
         [SVProgressHUD dismissWithDelay:1.5];
@@ -161,7 +203,7 @@
     {
         //提示
         [SVProgressHUD showErrorWithStatus:@"请输入您的性别"];
-        //用户未输入ID，出现键盘
+        //用户未输入密码，出现键盘
         [self.sexTextF becomeFirstResponder];
         [SVProgressHUD dismissWithDelay:1.5];
         return;
@@ -254,5 +296,16 @@
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
     return YES;
+}
+#pragma mark - 添加手势
+- (void)addGestures
+{
+    UITapGestureRecognizer * tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapGestureRecognize:)];
+    [self.view addGestureRecognizer:tapGestureRecognizer];
+}
+- (void)tapGestureRecognize:(UITapGestureRecognizer *)tapGesture
+{
+    //解除第一响应者
+    [self.view endEditing:YES];
 }
 @end

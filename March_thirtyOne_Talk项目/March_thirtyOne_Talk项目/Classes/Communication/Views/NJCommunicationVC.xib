@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -35,8 +35,8 @@
                             <rect key="frame" x="317" y="5" width="50" height="40"/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="40" id="c7D-qK-0wO"/>
-                                <constraint firstAttribute="width" constant="50" id="fxE-ER-YOW"/>
+                                <constraint firstAttribute="width" constant="50" id="5Eh-tG-MX5"/>
+                                <constraint firstAttribute="height" constant="40" id="DSo-Sl-nfK"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <state key="normal" title="发送">
@@ -49,49 +49,41 @@
                                 <action selector="sendBtnClick" destination="-1" eventType="touchUpInside" id="4ki-Xy-l4D"/>
                             </connections>
                         </button>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="kps-v0-RyW">
-                            <rect key="frame" x="8" y="5" width="50" height="40"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C7z-b3-hc4">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="40"/>
-                                    <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="50" id="VKA-MA-baX"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                    <state key="normal" title="阅后即焚">
-                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="burnAfterReadingBtnClick" destination="-1" eventType="touchUpInside" id="v4t-e0-h8Z"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="40" id="Zky-1C-G0c"/>
-                                <constraint firstAttribute="width" constant="50" id="cZo-bb-F50"/>
-                            </constraints>
-                        </stackView>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="KaS-SX-nHJ">
                             <rect key="frame" x="68" y="5" width="239" height="40"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="40" id="6Oy-ds-GjM"/>
+                                <constraint firstAttribute="height" constant="40" id="0pu-Xl-pgl"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                         </textView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C7z-b3-hc4">
+                            <rect key="frame" x="8" y="5" width="50" height="40"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="50" id="DIn-Pi-xvc"/>
+                                <constraint firstAttribute="height" constant="40" id="muT-J7-ZrF"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                            <state key="normal" title="阅后即焚">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="burnAfterReadingBtnClick" destination="-1" eventType="touchUpInside" id="v4t-e0-h8Z"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     <constraints>
-                        <constraint firstItem="8Tf-zG-Ht5" firstAttribute="centerY" secondItem="Re8-Le-AQd" secondAttribute="centerY" id="4a9-JW-pyi"/>
-                        <constraint firstAttribute="trailing" secondItem="8Tf-zG-Ht5" secondAttribute="trailing" constant="8" id="Iwm-j4-SDj"/>
-                        <constraint firstAttribute="bottom" secondItem="KaS-SX-nHJ" secondAttribute="bottom" constant="5" id="Let-QY-stu"/>
-                        <constraint firstItem="8Tf-zG-Ht5" firstAttribute="leading" secondItem="KaS-SX-nHJ" secondAttribute="trailing" constant="10" id="bMQ-UW-B1n"/>
+                        <constraint firstItem="C7z-b3-hc4" firstAttribute="centerY" secondItem="Re8-Le-AQd" secondAttribute="centerY" id="3vI-et-iHQ"/>
+                        <constraint firstItem="C7z-b3-hc4" firstAttribute="leading" secondItem="Re8-Le-AQd" secondAttribute="leading" constant="8" id="CNM-wt-5gF"/>
+                        <constraint firstItem="8Tf-zG-Ht5" firstAttribute="centerY" secondItem="Re8-Le-AQd" secondAttribute="centerY" id="OJT-aU-oaP"/>
+                        <constraint firstItem="KaS-SX-nHJ" firstAttribute="centerY" secondItem="Re8-Le-AQd" secondAttribute="centerY" id="UwA-e1-Ebw"/>
+                        <constraint firstAttribute="trailing" secondItem="8Tf-zG-Ht5" secondAttribute="trailing" constant="8" id="avL-WI-wc6"/>
+                        <constraint firstItem="KaS-SX-nHJ" firstAttribute="leading" secondItem="C7z-b3-hc4" secondAttribute="trailing" constant="10" id="gAf-DL-b1a"/>
                         <constraint firstAttribute="height" constant="50" id="jcQ-YJ-Oe3"/>
-                        <constraint firstItem="KaS-SX-nHJ" firstAttribute="leading" secondItem="kps-v0-RyW" secondAttribute="trailing" constant="10" id="nB1-yv-ut4"/>
-                        <constraint firstItem="kps-v0-RyW" firstAttribute="leading" secondItem="Re8-Le-AQd" secondAttribute="leading" constant="8" id="nY2-5A-8pg"/>
-                        <constraint firstItem="kps-v0-RyW" firstAttribute="centerY" secondItem="Re8-Le-AQd" secondAttribute="centerY" id="oEP-NZ-57D"/>
+                        <constraint firstItem="8Tf-zG-Ht5" firstAttribute="leading" secondItem="KaS-SX-nHJ" secondAttribute="trailing" constant="10" id="xGf-jK-61V"/>
                     </constraints>
                 </view>
             </subviews>
@@ -108,15 +100,6 @@
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <point key="canvasLocation" x="368.5" y="-7.5"/>
         </view>
-        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" id="JGy-Ga-Uqk">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-            <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-            <point key="canvasLocation" x="715" y="445"/>
-        </textView>
     </objects>
     <resources>
         <image name="disableBg" width="78" height="70"/>

@@ -47,6 +47,8 @@
         [self addSubview:userNameLabel];
         //4.聊天内容
         UIButton * textBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        //添加点击事件
+        [textBtn addTarget:self action:@selector(textBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         self.textBtn = textBtn;
         //设置换行
         self.textBtn.titleLabel.numberOfLines = 0;
@@ -111,5 +113,31 @@
 - (void)setBackGround:(NSString *)name
 {
     [self.textBtn setBackgroundImage:[UIImage lastImageWithName:name] forState:UIControlStateNormal];
+}
+//改变聊天内容
+- (void)setCommunicateContent:(NSString *)content
+{
+    //聊天内容
+    [self.textBtn setTitle:content forState:UIControlStateNormal];
+}
+//聊天内容被点击
+- (void)textBtnClick:(UIButton *)btn
+{
+    //如果是阅后即焚消息和为阅读过
+    if(self.messageFrame.message.secretMessageFlag && !self.messageFrame.message.hasReaded )
+    {
+        //更改为已经读过
+        self.messageFrame.message.hasReaded = true;
+        //修改聊天内容
+        [self setCommunicateContent:self.messageFrame.message.text];
+        //修改背景
+        [self setBackGround:@"secretBgAfterClick"];
+        //要传输给聊天控制器的信息
+        NSDictionary * userInfo = @{
+                                    @"deleteMessageModel" : self.messageFrame,
+                                    };
+        //发布延迟删除通知
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"startDelayDeleteMessage" object:self userInfo:userInfo];
+    }
 }
 @end

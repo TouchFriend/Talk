@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
 @interface NJTool : NSObject
 + (void)setToken:(NSString *)Token;
 + (NSString *)getToken;
@@ -22,4 +22,6 @@
 + (NSDateFormatter *)getFormatter;
 + (void)setIcon:(NSString *)newIcon;
 + (NSString *)getIcon;
+//设置导航控制器
++ (void)setNavigationController:(UINavigationController *)newNavigation;
 @end

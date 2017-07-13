@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,17 +18,18 @@
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="昵称" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SiJ-Ld-ZBU">
                     <rect key="frame" x="40" y="18" width="90" height="25"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="25" id="dDV-n8-3nY"/>
-                        <constraint firstAttribute="width" constant="90" id="qam-gW-QIp"/>
+                        <constraint firstAttribute="width" constant="90" id="E7X-K8-c38"/>
+                        <constraint firstAttribute="height" constant="25" id="hfH-zK-dz6"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="19"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Touch" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Sn-1h-sqE">
-                    <rect key="frame" x="180" y="18" width="155" height="25"/>
+                    <rect key="frame" x="155" y="18" width="200" height="25"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="25" id="wee-K3-J7c"/>
+                        <constraint firstAttribute="width" constant="200" id="8Gk-rW-pkj"/>
+                        <constraint firstAttribute="height" constant="25" id="Ibs-xu-cc4"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="19"/>
                     <nil key="textColor"/>
@@ -36,11 +38,10 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="SiJ-Ld-ZBU" firstAttribute="leading" secondItem="Kur-s4-GXH" secondAttribute="leading" constant="40" id="HGj-Ht-jb3"/>
-                <constraint firstAttribute="trailing" secondItem="8Sn-1h-sqE" secondAttribute="trailing" constant="40" id="Rsd-RJ-HTO"/>
-                <constraint firstItem="8Sn-1h-sqE" firstAttribute="leading" secondItem="SiJ-Ld-ZBU" secondAttribute="trailing" constant="50" id="drL-xy-hld"/>
-                <constraint firstItem="8Sn-1h-sqE" firstAttribute="centerY" secondItem="Kur-s4-GXH" secondAttribute="centerY" id="klI-I4-G2g"/>
-                <constraint firstItem="SiJ-Ld-ZBU" firstAttribute="centerY" secondItem="Kur-s4-GXH" secondAttribute="centerY" id="ol4-H1-uHq"/>
+                <constraint firstItem="SiJ-Ld-ZBU" firstAttribute="leading" secondItem="Kur-s4-GXH" secondAttribute="leading" constant="40" id="Omp-Ik-tTn"/>
+                <constraint firstItem="8Sn-1h-sqE" firstAttribute="centerY" secondItem="Kur-s4-GXH" secondAttribute="centerY" id="Sbn-KF-6FX"/>
+                <constraint firstItem="SiJ-Ld-ZBU" firstAttribute="centerY" secondItem="Kur-s4-GXH" secondAttribute="centerY" id="Z8a-ua-e6s"/>
+                <constraint firstAttribute="trailing" secondItem="8Sn-1h-sqE" secondAttribute="trailing" constant="20" id="pgY-LV-SyO"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>

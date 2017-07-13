@@ -14,10 +14,10 @@
 #import "UIImage+Image.h"
 #import "NJTableViewCell.h"
 #import "NJInfo.h"
-#import "MJExtension.h"
-#import "AFNetworking.h"
+#import <MJExtension.h>
+#import <AFNetworking.h>
 #import "NJTool.h"
-#import "SVProgressHUD.h"
+#import <SVProgressHUD.h>
 #import "NJOption.h"
 #import "NJSetterTableViewCell.h"
 #define NJOriginY -320
@@ -321,9 +321,13 @@ static NSString * bgOptionID = @"option";
                                   @"content" : [NSString stringWithFormat:@"%li",age],
                                   }];
         //5.出生年月
+        //格式化日期，只留下年月日
+        NSDateFormatter * birthdayFormatter = [[NSDateFormatter alloc]init];
+        birthdayFormatter.dateFormat = @"yyyy-MM-dd";
+        NSString * birthday = [birthdayFormatter stringFromDate:[[NJTool getFormatter] dateFromString:userInfoDic[@"birthday"]]];
         [userInfoArrM addObject:@{
                                   @"name" : @"出生年月",
-                                  @"content" : userInfoDic[@"birthday"],
+                                  @"content" : birthday,
                                   }];
         //6.所在地
         [userInfoArrM addObject:@{

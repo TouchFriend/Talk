@@ -16,4 +16,6 @@
 @property(nonatomic,strong)NJMessageFrame * messageFrame;
 //改变聊天背景
 - (void)setBackGround:(NSString *)name;
+//改变聊天内容
+- (void)setCommunicateContent:(NSString *)content;
 @end

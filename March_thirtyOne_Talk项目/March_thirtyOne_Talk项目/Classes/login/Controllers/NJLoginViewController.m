@@ -8,14 +8,16 @@
 //
 #define NJLoginPath @"data/user/login"
 #import "NJLoginViewController.h"
-#import "SVProgressHUD.h"
+#import <SVProgressHUD.h>
 #import "NJUserInfoVC.h"
 #import "NJRegisterVC.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "NSString+NJMD5String.h"
-#import "AFNetworking.h"
+#import <AFNetworking.h>
 #import "NJTool.h"
 #import "NJIconViewController.h"
+#import "NJServiceTermViewController.h"
+#import "NJForgetPwdViewController.h"
 @interface NJLoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *userIDTextF;
 @property (weak, nonatomic) IBOutlet UITextField *pwdTextF;
@@ -28,6 +30,18 @@
 @property (weak, nonatomic) IBOutlet UIButton *userIcon;
 //点击用户头像
 - (IBAction)clickUserIcon;
+//点击服务条款
+- (IBAction)serviceTermBtnClick;
+//点击忘记密码按钮
+- (IBAction)forgetPwdBtnClick;
+//记住账号
+@property (weak, nonatomic) IBOutlet UISwitch *rmbPwdSwitch;
+//点击记住账号
+- (IBAction)rmbPwdSwitchClick:(UISwitch *)sender;
+//自动登陆
+@property (weak, nonatomic) IBOutlet UISwitch *autoLoginSwitch;
+//点击自动登陆
+- (IBAction)autoLoginSwitchClick:(id)sender;
 
 @end
 
@@ -39,6 +53,24 @@
     [self setRoundImage];
     //设置登陆按钮有圆角
     [self setLoginBtnRoundCorner];
+    //添加点击手势
+    UITapGestureRecognizer * tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapGestureRecognize:)];
+    [self.view addGestureRecognizer:tapGestureRecognizer];
+    //延长启动界面时间
+    [NSThread sleepForTimeInterval:2.0];
+    //用户偏好设置
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    self.userIDTextF.text = [userDefaults objectForKey:@"account"];
+    self.rmbPwdSwitch.on = [userDefaults boolForKey:@"rmbPwd"];
+    self.autoLoginSwitch.on = [userDefaults boolForKey:@"autoLogin"];
+    if(self.rmbPwdSwitch.on == YES)
+    {
+        self.pwdTextF.text = [userDefaults objectForKey:@"password"];
+    }
+    if(self.autoLoginSwitch.on == YES)
+    {
+        [self loginBtnClick];
+    }
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -139,6 +171,14 @@
         NSLog(@"token:%@",responseObject[@"token"]);
         [NJTool setToken:responseObject[@"token"]];
         [SVProgressHUD dismissWithDelay:0.2 completion:^{
+            //保存用户偏好设置
+            NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+            [userDefaults setObject:self.userIDTextF.text forKey:@"account"];
+            [userDefaults setObject:self.pwdTextF.text forKey:@"password"];
+            [userDefaults setBool:self.rmbPwdSwitch.on forKey:@"rmbPwd"];
+            [userDefaults setBool:self.autoLoginSwitch.on forKey:@"autoLogin"];
+            //保存数据
+            [userDefaults synchronize];
             //跳到用户信息界面
             NJUserInfoVC * userInfoVC = [[NJUserInfoVC alloc]init];
             [self.navigationController pushViewController:userInfoVC animated:YES];
@@ -161,5 +201,41 @@
     //跳转到头像选择控制器
     NJIconViewController * iconVC = [[NJIconViewController alloc]init];
     [self.navigationController pushViewController:iconVC animated:YES];
+}
+#pragma mark - tapGestureRecognize
+- (void)tapGestureRecognize:(UITapGestureRecognizer *)tapGesture
+{
+    //解除文本框和密码框的第一响应者
+    [self.view endEditing:YES];
+}
+#pragma mark - 点击服务条款
+- (IBAction)serviceTermBtnClick
+{
+    NJServiceTermViewController * serviceTermVC = [[NJServiceTermViewController alloc]init];
+    [self.navigationController pushViewController:serviceTermVC animated:YES];
+}
+//点击忘记密码按钮
+- (IBAction)forgetPwdBtnClick
+{
+    NJForgetPwdViewController * forgetPwdVC = [[NJForgetPwdViewController alloc]init];
+    [self.navigationController pushViewController:forgetPwdVC animated:YES];
+}
+#pragma mark - 用户偏好
+//点击记住密码
+- (IBAction)rmbPwdSwitchClick:(UISwitch *)rmbPwdSwitch
+{
+    if([rmbPwdSwitch isOn] == NO)
+    {
+        [self.autoLoginSwitch setOn:NO animated:YES];
+        
+    }
+}
+//点击自动登陆
+- (IBAction)autoLoginSwitchClick:(id)autoLoginSwitch
+{
+    if([autoLoginSwitch isOn])
+    {
+        [self.rmbPwdSwitch setOn:YES animated:YES];
+    }
 }
 @end

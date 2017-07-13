@@ -5,7 +5,7 @@
 //  Created by TouchWorld on 2017/4/8.
 //  Copyright © 2017年 cxz. All rights reserved.
 //
-
+#define NJTextMaxSize [UIScreen mainScreen].bounds.size.width - 140
 #import "NJMessageFrame.h"
 #import "NJMessage.h"
 #import "NSString+NJTextSize.h"
@@ -58,7 +58,8 @@
     //4.聊天内容
     CGFloat textY = CGRectGetMaxY(_userNameFram);
     //文字的最大size
-    CGSize textMaxSize = CGSizeMake(240, MAXFLOAT);
+    
+    CGSize textMaxSize = CGSizeMake(NJTextMaxSize, MAXFLOAT);
     //文字的真实size
     CGSize textSize = [messagE.text textSizeWithFont:NJContentFont size:textMaxSize];
     //按钮的真实size

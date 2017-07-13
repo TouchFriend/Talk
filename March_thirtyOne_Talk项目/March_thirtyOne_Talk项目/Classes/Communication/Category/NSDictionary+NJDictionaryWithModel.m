@@ -20,6 +20,10 @@
     //2.senderName
     [dicM setObject:message.senderName forKey:@"senderName"];
     //3.text
+    if(message.text == NULL)
+    {
+        message.text = @"        ";
+    }
     [dicM setObject:message.text forKey:@"text"];
     //4.time
     [dicM setObject:message.time forKey:@"time"];

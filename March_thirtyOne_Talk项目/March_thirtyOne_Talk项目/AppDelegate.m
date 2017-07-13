@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "NJLoginViewController.h"
+#import "NJTool.h"
 @interface AppDelegate () <UIGestureRecognizerDelegate>
 
 @end
@@ -28,6 +29,8 @@
     self.window.rootViewController = navigation;
     //关闭右划返回
     navigation.interactivePopGestureRecognizer.delegate = self;
+    //设置NJTool的导航控制器
+    [NJTool setNavigationController:navigation];
     //3.显示窗口
     [self.window makeKeyAndVisible];
     return YES;

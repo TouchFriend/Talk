@@ -5,7 +5,7 @@
 //  Created by TouchWorld on 2017/4/1.
 //  Copyright © 2017年 cxz. All rights reserved.
 //
-
+#define NJPillowTalk @"悄悄话"
 #import "NJCommunicationVC.h"
 #import "NJFriendsViewController.h"
 #import "NJMessageFrame.h"
@@ -14,10 +14,8 @@
 #import "NSDictionary+NJDictionaryWithModel.h"
 #import "NSArray+NJDictionaryArrWithModelArr.h"
 #import "NJTool.h"
-#import "AFNetworking.h"
-#import "SVProgressHUD.h"
-#import "NJSecretMessageCell.h"
-#import "NJSecretMessageCell.h"
+#import <AFNetworking.h>
+#import <SVProgressHUD.h>
 @interface NJCommunicationVC () <UITableViewDataSource,UITableViewDelegate,UITextViewDelegate,UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 /********* 聊天信息 *********/
@@ -45,7 +43,6 @@
 
 @implementation NJCommunicationVC
 static NSString * ID = @"message";
-static NSString * secretMessageID = @"secretMessage";
 - (void)viewDidLoad {
     [super viewDidLoad];
     //设置标题
@@ -60,7 +57,6 @@ static NSString * secretMessageID = @"secretMessage";
     self.tableView.delegate = self;
     //注册cell
     [self.tableView registerClass:[NJMessageCell class] forCellReuseIdentifier:ID];
-    [self.tableView registerNib:[UINib nibWithNibName:NSStringFromClass([NJSecretMessageCell class]) bundle:nil] forCellReuseIdentifier:secretMessageID];
     //隐藏分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //设置背景颜色
@@ -75,6 +71,7 @@ static NSString * secretMessageID = @"secretMessage";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inputViewValueChange) name:@"UITextViewTextDidChangeNotification" object:self.inputTextView];
     //监听通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMessage:) name:@"messageCome" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(delayDeleteMessage:) name:@"startDelayDeleteMessage" object:nil];
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -195,7 +192,13 @@ static NSString * secretMessageID = @"secretMessage";
     //2.是阅后即焚且未看过
     else if(messageFrame.message.secretMessageFlag && !messageFrame.message.hasReaded)
     {
-        NJSecretMessageCell * cell = [tableView dequeueReusableCellWithIdentifier:secretMessageID];
+        NJMessageCell * cell = [tableView dequeueReusableCellWithIdentifier:ID];
+        //设置cell数据
+        cell.messageFrame = messageFrame;
+        //改变聊天内容
+        [cell setCommunicateContent:NJPillowTalk];
+        //改变cell的聊天背景
+        [cell setBackGround:@"secretBgBeforeClick"];
         return cell;
     }
     //3.是阅后即焚且看过
@@ -205,23 +208,14 @@ static NSString * secretMessageID = @"secretMessage";
         //设置cell数据
         cell.messageFrame = messageFrame;
         //改变cell的聊天背景
-        [cell setBackGround:@"background"];
+        [cell setBackGround:@"secretBgAfterClick"];
         return cell;
     }
-    NJMessageCell * cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    //设置cell数据
-    cell.messageFrame = self.messageArrM[indexPath.row];
-    return cell;
-    
 }
 #pragma  mark - UITableViewDelegate方法
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NJMessageFrame * messageFrame = self.messageArrM[indexPath.row];
-    if(messageFrame.message.secretMessageFlag && !messageFrame.message.hasReaded)
-    {
-        return 60;
-    }
     return messageFrame.cellHeight;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -229,37 +223,6 @@ static NSString * secretMessageID = @"secretMessage";
     //解除输入框的第一响应者
     [self tableViewTouch];
     NSLog(@"didSelectRowAtIndexPath-----%ld",indexPath.row);
-    NJMessageFrame * messageFrame = self.messageArrM[indexPath.row];
-    if(messageFrame.message.secretMessageFlag && !messageFrame.message.hasReaded)
-    {
-        messageFrame.message.hasReaded = YES;
-        [self.tableView reloadData];
-        //tablevie移到末尾
-        [self pullToTableBottom];
-        //通过文字长度计算延迟时间
-        CGFloat time = (messageFrame.message.text.length / 3.5) > 4.0 ? (messageFrame.message.text.length / 3.5) : 4.0;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            //从后往前遍历模型数组
-            for (NSInteger index = self.messageArrM.count - 1; index >= 0; index--)
-            {
-                //找到阅后即焚消息后删除
-                if(messageFrame == self.messageArrM[index])
-                {
-                    [self.messageArrM removeObjectAtIndex:index];
-                    break;
-                }
-            }
-            //刷新表格
-            [self.tableView reloadData];
-            //tablevie移到末尾
-            [self pullToTableBottom];
-            //通知服务器消息已经阅读过了
-            [self secretMessageHasReaded:messageFrame.message.MessageID];
-        });
-        
-
-    }
-
 }
 #pragma mark - UITextViewDelegate方法
 #pragma mark - 点击发送按钮
@@ -323,11 +286,16 @@ static NSString * secretMessageID = @"secretMessage";
     self.inputTextView.text = @"";
     self.sendBtn.enabled = NO;
     //11.将数据写入沙盒
+    [self saveMessagesTosandBox];
+    //12.拉到tableview的底部
+    [self pullToTableBottom];
+}
+//将聊天信息写入沙盒中
+- (void)saveMessagesTosandBox
+{
     //模型数组转字典数组
     NSArray * dicArr = [NSArray dictionaryArrWithModelArr:self.messageArrM];
     [dicArr writeToFile:self.pathStr atomically:YES];
-    //12.拉到tableview的底部
-    [self pullToTableBottom];
 }
 - (NJMessage *)getMessage
 {
@@ -408,6 +376,13 @@ static NSString * secretMessageID = @"secretMessage";
         NSArray * secretNoticeArr = notification.userInfo[@"secret_notice"];
         if(messageArr.count > 0)
         {
+            //设置最后一次接收消息的时间
+            //1.取出第一条消息
+            NSDictionary * firstMessage = messageArr[0];
+            //2.取出消息时间
+            NSString * dateStr = firstMessage[@"publish_time"];
+            //3.更新最后一次接收时间
+            [NJTool setLastReceiveMessageTime:dateStr];
             for (NSDictionary * message in messageArr)
             {
                 if(message[@"receiver"] == [NSNull null])
@@ -417,13 +392,14 @@ static NSString * secretMessageID = @"secretMessage";
                     NSDictionary * messageDic = [NSJSONSerialization JSONObjectWithData:[messageStr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NJMessage * getMessage = [NJMessage messageWithDic:messageDic];
                     //设置消息ID
-                    //                    getMessage.MessageID = [message[@"id"] integerValue];
                     getMessage.MessageID = [message[@"id"]  integerValue];
                     NSLog(@"message---%@",getMessage);
                     NJMessageFrame * messageFrame = [[NJMessageFrame alloc]init];
                     messageFrame.message = getMessage;
                     //将数据添加到数据数组中
                     [self.messageArrM addObject:messageFrame];
+                    //将数据写入沙盒中
+                    [self saveMessagesTosandBox];
                     //刷新表格
                     [self.tableView reloadData];
                     //拉到tableview的底部
@@ -501,6 +477,32 @@ static NSString * secretMessageID = @"secretMessage";
             NSLog(@"%@",error);
         }
     }];
+}
+#pragma mark - 延迟删除消息
+- (void)delayDeleteMessage:(NSNotification *)notification
+{
+    //取出要删除的消息模型
+    NJMessageFrame * messageFrame = (NJMessageFrame *)notification.userInfo[@"deleteMessageModel"];
+    //通过文字长度计算延迟时间
+    CGFloat time = (messageFrame.message.text.length / 3.5) > 4.0 ? (messageFrame.message.text.length / 3.5) : 4.0;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        //从后往前遍历模型数组
+        for (NSInteger index = self.messageArrM.count - 1; index >= 0; index--)
+        {
+            //找到阅后即焚消息后删除
+            if(messageFrame == self.messageArrM[index])
+            {
+                [self.messageArrM removeObjectAtIndex:index];
+                break;
+            }
+        }
+        //刷新表格
+        [self.tableView reloadData];
+        //tablevie移到末尾
+        [self pullToTableBottom];
+        //通知服务器消息已经阅读过了
+        [self secretMessageHasReaded:messageFrame.message.MessageID];
+    });
 
 }
 @end

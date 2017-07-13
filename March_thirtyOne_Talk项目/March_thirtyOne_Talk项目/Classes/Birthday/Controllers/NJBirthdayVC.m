@@ -9,7 +9,7 @@
 #import "NJBirthdayVC.h"
 #import <Foundation/Foundation.h>
 #import "NJBirthdayVCDelegate.h"
-@interface NJBirthdayVC ()
+@interface NJBirthdayVC () <UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (weak, nonatomic) IBOutlet UILabel *ageLabel;
 - (IBAction)backBtnItemClick:(id)sender;
@@ -44,6 +44,8 @@
     {
         self.datePicker.date = [self.formatter dateFromString:self.birthdayDate];
     }
+    //关闭右划返回
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -63,6 +65,7 @@
         _formatter = formatter;
     }
     return _formatter;
+    
 
 }
 - (void)dateChange:(UIDatePicker *)pickerView
@@ -82,5 +85,10 @@
     }
     //控制器跳转
     [self.navigationController popViewControllerAnimated:YES];
+}
+#pragma mark - UIGestureRecognizerDelegate方法
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    return NO;
 }
 @end

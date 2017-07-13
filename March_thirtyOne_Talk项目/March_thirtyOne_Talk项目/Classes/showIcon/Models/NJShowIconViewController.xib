@@ -20,14 +20,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="witch" translatesAutoresizingMaskIntoConstraints="NO" id="b5p-qt-o0D" userLabel="icon">
-                    <rect key="frame" x="10" y="100" width="355" height="397"/>
+                    <rect key="frame" x="10" y="100" width="355" height="467"/>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eps-Gc-vbx">
-                    <rect key="frame" x="305" y="597" width="50" height="50"/>
+                    <rect key="frame" x="295" y="597" width="50" height="50"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="Ete-s5-NLm"/>
-                        <constraint firstAttribute="width" constant="50" id="xtM-Or-jZL"/>
+                        <constraint firstAttribute="width" constant="50" id="frH-J9-Qh9"/>
+                        <constraint firstAttribute="height" constant="50" id="igg-CB-mby"/>
                     </constraints>
                     <state key="normal" title="确定">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -39,12 +39,12 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="b5p-qt-o0D" secondAttribute="trailing" constant="10" id="B03-8Q-8uA"/>
-                <constraint firstAttribute="trailing" secondItem="eps-Gc-vbx" secondAttribute="trailing" constant="20" id="Fwn-lc-9Cz"/>
-                <constraint firstItem="b5p-qt-o0D" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="Q7V-jB-lMi"/>
-                <constraint firstItem="eps-Gc-vbx" firstAttribute="top" secondItem="b5p-qt-o0D" secondAttribute="bottom" constant="100" id="bgU-H0-ot6"/>
-                <constraint firstAttribute="bottom" secondItem="eps-Gc-vbx" secondAttribute="bottom" constant="20" id="hLt-i1-Cdn"/>
-                <constraint firstItem="b5p-qt-o0D" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="100" id="wYH-Nl-sik"/>
+                <constraint firstAttribute="bottom" secondItem="b5p-qt-o0D" secondAttribute="bottom" constant="100" id="Gv4-nf-mPd"/>
+                <constraint firstItem="b5p-qt-o0D" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="100" id="IN3-D1-8YS"/>
+                <constraint firstAttribute="trailing" secondItem="eps-Gc-vbx" secondAttribute="trailing" constant="30" id="RLT-xa-Hfv"/>
+                <constraint firstAttribute="bottom" secondItem="eps-Gc-vbx" secondAttribute="bottom" constant="20" id="cLn-eo-ecQ"/>
+                <constraint firstItem="b5p-qt-o0D" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="feh-SY-SvU"/>
+                <constraint firstAttribute="trailing" secondItem="b5p-qt-o0D" secondAttribute="trailing" constant="10" id="gcG-Rd-35N"/>
             </constraints>
             <point key="canvasLocation" x="33.5" y="53.5"/>
         </view>

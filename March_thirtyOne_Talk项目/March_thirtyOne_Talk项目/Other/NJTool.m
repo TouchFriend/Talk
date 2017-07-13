@@ -7,7 +7,7 @@
 //
 
 #import "NJTool.h"
-#import "AFNetworking.h"
+#import <AFNetworking.h>
 #define NJMessages @"messages"
 #define NJSecret_notice @"secret_notice"
 @implementation NJTool
@@ -18,6 +18,8 @@ static NSString * fullPath;
 static BOOL flag;
 static NSDateFormatter * formatter;
 static NSString * icon;
+//导航控制器
+static UINavigationController * navigationConroller;
 + (void)setToken:(NSString *)newToken
 {
     fullPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"token.plist"];
@@ -67,18 +69,24 @@ static NSString * icon;
         while (flag)
         {
             @synchronized (self) {
-                [NSThread sleepForTimeInterval:3.0];
+                [NSThread sleepForTimeInterval:10.0];
                 [parametersDic setObject:[NJTool getLastReceiveMessageTime] forKey:@"last_time"];
                 [manager POST:urlToken parameters:parametersDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//                    NSLog(@"%@",responseObject);
-                    //                NSLog(@"---------%@",urlToken);
+                    //判断是否异常
                     if([responseObject[@"status"] intValue] < 0)
                     {
                         NSLog(@"%@",responseObject[@"inf"]);
+                        //调到登陆界面
+//                        if([responseObject[@"inf"] isEqualToString:@"不存在用户"])
+//                        {
+//                           [navigationConroller popToRootViewControllerAnimated:YES];
+//                        }
                         return;
                     }
+//                    NSLog(@"responseObject%@",responseObject);
                     NSArray * messageArr = responseObject[NJMessages];
                     NSArray * secret_notice = responseObject[NJSecret_notice];
+                    //有收到消息
                     if(messageArr.count > 0  || secret_notice.count > 0)
                     {
                         NSMutableDictionary * messageDicM = [NSMutableDictionary dictionary];
@@ -86,9 +94,6 @@ static NSString * icon;
                         [messageDicM setValue:secret_notice forKey:NJSecret_notice];
                         //发送通知
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"messageCome" object:self userInfo:messageDicM];
-                        //设置最后一次接收消息的时间
-                        NSString * dateStr = [[self getFormatter] stringFromDate:[NSDate date]];
-                        [NJTool setLastReceiveMessageTime:dateStr];
                     }
                     
                 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -130,5 +135,10 @@ static NSString * icon;
 + (void)setIcon:(NSString *)newIcon
 {
     icon = newIcon;
+}
+//设置导航控制器
++ (void)setNavigationController:(UINavigationController *)newNavigation
+{
+    navigationConroller = newNavigation;
 }
 @end

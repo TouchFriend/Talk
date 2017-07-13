@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 @class NJMessageFrame;
+@class NJMessage;
 @interface NSDictionary (NJDictionaryWithModel)
 //模型转字典
 + (NSDictionary *)dictionaryWithModel:(NJMessageFrame *)messageF;
++ (NSDictionary *)dictionaryWithMessageModel:(NJMessage *)message;
 @end

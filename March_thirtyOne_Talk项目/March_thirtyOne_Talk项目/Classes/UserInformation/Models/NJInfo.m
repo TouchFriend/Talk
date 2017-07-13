@@ -9,5 +9,8 @@
 #import "NJInfo.h"
 
 @implementation NJInfo
-
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@----%@",self.name,self.content];
+}
 @end

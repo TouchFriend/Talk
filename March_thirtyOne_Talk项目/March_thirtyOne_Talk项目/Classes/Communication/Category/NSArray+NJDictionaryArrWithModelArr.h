@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
 @interface NSArray (NJDictionaryArrWithModelArr)
 //模型数组转字典数组
 + (NSArray *)dictionaryArrWithModelArr:(NSArray *)modeleArr;
+
 @end

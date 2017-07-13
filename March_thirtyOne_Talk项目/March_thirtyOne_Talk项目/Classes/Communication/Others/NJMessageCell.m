@@ -57,6 +57,8 @@
         [self addSubview:textBtn];
          //5.设置cell的背景色
         [self setBackgroundColor:[UIColor clearColor]];
+        //6.设置cell选中的样式
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
@@ -105,5 +107,9 @@
         [self.textBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
 }
-
+//改变聊天背景
+- (void)setBackGround:(NSString *)name
+{
+    [self.textBtn setBackgroundImage:[UIImage lastImageWithName:name] forState:UIControlStateNormal];
+}
 @end

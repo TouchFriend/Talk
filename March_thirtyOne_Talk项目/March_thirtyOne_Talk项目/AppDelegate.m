@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "NJLoginViewController.h"
-@interface AppDelegate ()
+@interface AppDelegate () <UIGestureRecognizerDelegate>
 
 @end
 
@@ -24,9 +24,17 @@
     NJLoginViewController * loginVC = [[NJLoginViewController alloc]init];
     navigation.navigationBar.hidden = YES;
     [navigation pushViewController:loginVC animated:YES];
+//    [navigation setEdgesForExtendedLayout:UIRectEdgeRight];
     self.window.rootViewController = navigation;
+    //关闭右划返回
+    navigation.interactivePopGestureRecognizer.delegate = self;
     //3.显示窗口
     [self.window makeKeyAndVisible];
     return YES;
+}
+#pragma mark - UIGestureRecognizerDelegate方法
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    return NO;
 }
 @end

@@ -30,7 +30,7 @@
     {
         [resultStrM appendString:[NSString stringWithFormat:@"%02x",result[i]]];
     }
-    NSLog(@"加密后的字符串：%@",resultStrM);
+//    NSLog(@"加密后的字符串：%@",resultStrM);
     return resultStrM;
     
 }

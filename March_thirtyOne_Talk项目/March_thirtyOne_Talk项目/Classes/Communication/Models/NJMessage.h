@@ -24,6 +24,15 @@ typedef enum {
 @property(nonatomic,assign)NJMessageSender type;
 /********* 是否显示时间 *********/
 @property(nonatomic,assign)BOOL hideTime;
+/********* 消息ID *********/
+@property(nonatomic,assign)NSInteger MessageID;
+/********* 是否是阅后即焚消息 *********/
+@property(nonatomic,assign)BOOL secretMessageFlag;
+/********* 阅后即焚消息是否已经度过 *********/
+@property(nonatomic,assign)BOOL hasReaded;
+
+
+
 - (instancetype)initWithDic:(NSDictionary *)dic;
 + (instancetype)messageWithDic:(NSDictionary *)dic;
 

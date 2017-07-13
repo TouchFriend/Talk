@@ -1,0 +1,8 @@
+#define NJServiceHttp @"http://talk.gayhub.studio"
+#define NJSalt @"315315315"
+#define NJBeats @"data/message/recv"
+#define NJInvite @"data/user/getInviteCode"
+#define NJJoinGroup @"data/user/selectGroup"
+#define NJExitGroup @"data/group/exit"
+#define NJSendMessage @"data/message/send"
+#define NJSecretMessagehasReaded @"data/message/secretDestroy"

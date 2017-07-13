@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NJShowIconViewController">
+            <connections>
+                <outlet property="userIconImageView" destination="b5p-qt-o0D" id="XNv-PU-VMS"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" alpha="0.90000000000000002" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="witch" translatesAutoresizingMaskIntoConstraints="NO" id="b5p-qt-o0D" userLabel="icon">
+                    <rect key="frame" x="10" y="100" width="355" height="397"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eps-Gc-vbx">
+                    <rect key="frame" x="305" y="597" width="50" height="50"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="Ete-s5-NLm"/>
+                        <constraint firstAttribute="width" constant="50" id="xtM-Or-jZL"/>
+                    </constraints>
+                    <state key="normal" title="确定">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="clickOkbtn:" destination="-1" eventType="touchUpInside" id="seS-pi-6EU"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="b5p-qt-o0D" secondAttribute="trailing" constant="10" id="B03-8Q-8uA"/>
+                <constraint firstAttribute="trailing" secondItem="eps-Gc-vbx" secondAttribute="trailing" constant="20" id="Fwn-lc-9Cz"/>
+                <constraint firstItem="b5p-qt-o0D" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="Q7V-jB-lMi"/>
+                <constraint firstItem="eps-Gc-vbx" firstAttribute="top" secondItem="b5p-qt-o0D" secondAttribute="bottom" constant="100" id="bgU-H0-ot6"/>
+                <constraint firstAttribute="bottom" secondItem="eps-Gc-vbx" secondAttribute="bottom" constant="20" id="hLt-i1-Cdn"/>
+                <constraint firstItem="b5p-qt-o0D" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="100" id="wYH-Nl-sik"/>
+            </constraints>
+            <point key="canvasLocation" x="33.5" y="53.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="witch" width="1354" height="1444"/>
+    </resources>
+</document>

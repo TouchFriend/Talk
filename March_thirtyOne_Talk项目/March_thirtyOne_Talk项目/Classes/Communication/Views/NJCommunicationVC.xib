@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NJCommunicationVC">
             <connections>
                 <outlet property="bottomToolStrainterHeight" destination="jcQ-YJ-Oe3" id="4XX-lG-KuY"/>
+                <outlet property="burnAfterReadingBtn" destination="C7z-b3-hc4" id="Qw5-KM-dBk"/>
                 <outlet property="inputTextView" destination="KaS-SX-nHJ" id="V8h-I3-QNW"/>
                 <outlet property="sendBtn" destination="8Tf-zG-Ht5" id="KfO-Ct-0oN"/>
                 <outlet property="tableView" destination="jdA-bQ-dLI" id="NJF-hk-RPC"/>
@@ -58,9 +59,12 @@
                                         <constraint firstAttribute="width" constant="50" id="VKA-MA-baX"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                    <state key="normal" title="阅后及焚">
+                                    <state key="normal" title="阅后即焚">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
+                                    <connections>
+                                        <action selector="burnAfterReadingBtnClick" destination="-1" eventType="touchUpInside" id="v4t-e0-h8Z"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <constraints>

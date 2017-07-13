@@ -14,5 +14,6 @@
 @interface NJMessageCell : UITableViewCell
 /********* 数据模型 *********/
 @property(nonatomic,strong)NJMessageFrame * messageFrame;
-
+//改变聊天背景
+- (void)setBackGround:(NSString *)name;
 @end

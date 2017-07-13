@@ -6,23 +6,28 @@
 //  Created by TouchWorld on 2017/3/31.
 //  Copyright © 2017年 cxz. All rights reserved.
 //
-
+#define NJLoginPath @"data/user/login"
 #import "NJLoginViewController.h"
 #import "SVProgressHUD.h"
 #import "NJUserInfoVC.h"
 #import "NJRegisterVC.h"
-#import "GCDAsyncUdpSocket.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "NSString+NJMD5String.h"
-@interface NJLoginViewController () <GCDAsyncUdpSocketDelegate>
-@property (weak, nonatomic) IBOutlet UIImageView *userIcon;
+#import "AFNetworking.h"
+#import "NJTool.h"
+#import "NJIconViewController.h"
+@interface NJLoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *userIDTextF;
 @property (weak, nonatomic) IBOutlet UITextField *pwdTextF;
 @property (weak, nonatomic) IBOutlet UIButton *loginBtn;
 - (IBAction)loginBtnClick;
 - (IBAction)ResBtnClick;
-/********* sendSocket *********/
-@property(nonatomic,strong)GCDAsyncUdpSocket * sendSocket;
+/********* 会话管理者 *********/
+@property(nonatomic,strong)AFHTTPSessionManager * manager;
+//用户头像
+@property (weak, nonatomic) IBOutlet UIButton *userIcon;
+//点击用户头像
+- (IBAction)clickUserIcon;
 
 @end
 
@@ -34,36 +39,40 @@
     [self setRoundImage];
     //设置登陆按钮有圆角
     [self setLoginBtnRoundCorner];
-    dispatch_queue_t queue = dispatch_queue_create("Login", 0);
-    self.sendSocket = [[GCDAsyncUdpSocket alloc]initWithDelegate:self delegateQueue:queue];
-    NSError * error;
-    //绑定端口
-    [self.sendSocket bindToPort:NJClientLoginPort error:&error];
-    if(error)
-    {
-        NSLog(@"绑定端口失败");
-    }
-    //开始接受数据
-    [self.sendSocket beginReceiving:nil];
-    
 }
-
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    //设置用户头像
+    [self.userIcon setImage:[UIImage imageNamed:[NJTool getIcon]] forState:UIControlStateNormal];
+    [self.userIcon setImage:[UIImage imageNamed:[NJTool getIcon]] forState:UIControlStateHighlighted];
+}
+//懒加载
+- (AFHTTPSessionManager *)manager
+{
+    if(_manager == nil)
+    {
+        _manager = [AFHTTPSessionManager manager];
+    }
+    return _manager;
+}
 - (void)setRoundImage
 {
     //1.设置图片名
-    UIImage * image = [UIImage imageNamed:@"xcode"];
+    UIImage * image = [UIImage imageNamed:[NJTool getIcon]];
     //2.允许裁剪
     self.userIcon.layer.masksToBounds = YES;
     //3.设置圆角半径
     self.userIcon.layer.cornerRadius = self.userIcon.frame.size.width / 2;
-    self.userIcon.image = image;
+    [self.userIcon setImage:image forState:UIControlStateNormal];
+    [self.userIcon setImage:image forState:UIControlStateHighlighted];
 }
 - (void)setLoginBtnRoundCorner
 {
     self.loginBtn.layer.masksToBounds = YES;
     self.loginBtn.layer.cornerRadius = 10;
 }
-
+#pragma mark - 点击登陆按钮
 - (IBAction)loginBtnClick
 {
     //出现黑色幕布
@@ -95,65 +104,49 @@
     [self.pwdTextF resignFirstResponder];
     //提示
     [SVProgressHUD showWithStatus:@"正在登陆中...."];
-    //判断用户ID和密码是否正确
-    if([self isLoginWithID:userID pwd:userPwd])
-    {
-        [SVProgressHUD dismissWithCompletion:^{
-            //1.创建用户信息控制器
+    //发送请求
+    [self sendRequestWithID:self.userIDTextF.text pwd:self.pwdTextF.text];
+
+}
+//发送登陆请求
+- (void)sendRequestWithID:(NSString *)userAccount pwd:(NSString *)userPwd
+{
+    //1.请求体
+    //参数字典
+    NSMutableDictionary * parameterDicM = [NSMutableDictionary dictionary];
+    //账号
+    [parameterDicM setObject:userAccount forKey:@"account"];
+    //1密码加盐
+    NSString * pwdAfterAddSalt = [userPwd stringByAppendingString:NJSalt];
+    //2密码MD5加密
+    NSString * securePwd = [NSString md5String:pwdAfterAddSalt];
+    //3将加密后的密码加入字典
+    [parameterDicM setObject:securePwd forKey:@"password"];
+    //2.拼接URL地址
+    NSString * urlStr = [NJServiceHttp stringByAppendingPathComponent:NJLoginPath];
+    NSLog(@"%@",urlStr);
+    //3.发送请求
+    [self.manager POST:urlStr parameters:parameterDicM progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if([responseObject[@"status"] intValue] < 0)
+        {
+            NSLog(@"%@",responseObject[@"inf"]);
+            NSString * info = responseObject[@"inf"];
+            //提示
+            [SVProgressHUD showErrorWithStatus:info];
+            [SVProgressHUD dismissWithDelay:1.5];
+            return;
+        }
+        NSLog(@"token:%@",responseObject[@"token"]);
+        [NJTool setToken:responseObject[@"token"]];
+        [SVProgressHUD dismissWithDelay:0.2 completion:^{
+            //跳到用户信息界面
             NJUserInfoVC * userInfoVC = [[NJUserInfoVC alloc]init];
-            //2.添加到navigation控制器中
             [self.navigationController pushViewController:userInfoVC animated:YES];
         }];
     }
-    else
-    {
-        [SVProgressHUD showErrorWithStatus:@"用户名或密码不正确！"];
-        [SVProgressHUD dismissWithDelay:1.5];
-      
-    }
-}
-//判断用户ID和密码是否正确
-- (BOOL)isLoginWithID:(NSString *)userAccount pwd:(NSString *)userPwd
-{
-    //1.包头
-    Byte head2[] = {7,1};
-    NSInteger accountLength = strlen(userAccount.UTF8String);
-    NSData * accountData = [userAccount dataUsingEncoding:NSASCIIStringEncoding];
-//    NSLog(@"account%@",[[NSString alloc]initWithData:accountData encoding:NSASCIIStringEncoding]);
-    //2.包内容
-    //2.1将密码加盐
-    NSString * packetContent = [userPwd stringByAppendingString:NJSalt];
-    //2.2将密码MD5加密
-    NSString * secureString = [NSString md5String:packetContent];
-    NSInteger userPwdLength = strlen(secureString.UTF8String);
-    //3.包尾
-    //4.计算包长 = 8 + 账号长度 + 加密后的密码长度
-    int packetLength = (int)( 8 + accountLength + userPwdLength);
-    //5.拼接成包
-    //5.1头两个字节
-    NSMutableData * packetDataM = [NSMutableData dataWithBytes:head2 length:2];
-    //5.2账号长度
-    Byte accountLenB[] = {accountLength};
-    [packetDataM appendBytes:accountLenB length:1];
-    //5.3账号
-    [packetDataM appendData:accountData];
-    //5.4包长度
-    Byte packetLenB[] = {0,0,0,0};
-    NSLog(@"%i",(Byte)(packetLength & 0xff));
-    packetLenB[0] = (Byte)((packetLength >> 24) & 0xff);
-    packetLenB[1] = (Byte)((packetLength >> 16) & 0xff);
-    packetLenB[2] = (Byte)((packetLength >> 8) & 0xff);
-    packetLenB[3] = (Byte)(packetLength & 0xff);
-    [packetDataM appendBytes:packetLenB length:4];
-    //5.5加密后的密码
-    [packetDataM appendData:[secureString dataUsingEncoding:NSUTF8StringEncoding]];
-    //5.6添加包尾
-    NSString * packetTailStr = [NSString stringWithFormat:@"%d",NJPacketTail];
-    [packetDataM appendBytes:[[packetTailStr dataUsingEncoding:kCFStringEncodingUTF8] bytes] length:1];
-    //6.发送数据
-    NSLog(@"要发送的数据:%@",packetDataM);
-    [self.sendSocket sendData:packetDataM toHost:NJServerIP port:NJServerPort withTimeout:50 tag:200];
-    return YES;
+    failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [SVProgressHUD dismiss];
+    }];
 }
 //点击注册按钮
 - (IBAction)ResBtnClick
@@ -161,17 +154,12 @@
     NJRegisterVC * registerVC = [[NJRegisterVC alloc]init];
     [self.navigationController pushViewController:registerVC animated:YES];
 }
-#pragma mark - GCDAsyncUdpSocketDelegate方法
-//接收服务器返回的数据
-- (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext
+
+//点击用户头像
+- (IBAction)clickUserIcon
 {
-    NSLog(@"%@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
-}
-- (void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error
-{
-    if(tag == 200)
-    {
-        NSLog(@"发送失败");
-    }
+    //跳转到头像选择控制器
+    NJIconViewController * iconVC = [[NJIconViewController alloc]init];
+    [self.navigationController pushViewController:iconVC animated:YES];
 }
 @end

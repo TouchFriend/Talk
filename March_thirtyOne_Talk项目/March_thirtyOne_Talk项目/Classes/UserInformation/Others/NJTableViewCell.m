@@ -23,6 +23,7 @@
 }
 - (void)setInfo:(NJInfo *)info
 {
+    _info = info;
     self.nameLabel.text = info.name;
     self.contentLabel.text = info.content;
 }

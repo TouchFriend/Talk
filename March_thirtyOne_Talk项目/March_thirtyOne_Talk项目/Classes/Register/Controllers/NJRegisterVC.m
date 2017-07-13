@@ -5,19 +5,23 @@
 //  Created by TouchWorld on 2017/4/5.
 //  Copyright © 2017年 cxz. All rights reserved.
 //
-
+#define NJRegisterPath @"data/user/register"
 #import "NJRegisterVC.h"
 #import "NJBirthdayVC.h"
 #import "NJBirthdayVCDelegate.h"
 #import "NJSexTextF.h"
-#import "NJUDPSendSocket.h"
-@interface NJRegisterVC () <NJBirthdayVCDelegate,GCDAsyncUdpSocketDelegate>
+#import "AFNetworking.h"
+#import "SVProgressHUD.h"
+#import "NSString+NJMD5String.h"
+@interface NJRegisterVC () <NJBirthdayVCDelegate,UIGestureRecognizerDelegate>
 /********* 性别数组 *********/
 @property(nonatomic,strong)NSArray * sexArr;
 /********* 邮箱 *********/
 @property (weak, nonatomic) IBOutlet UITextField *emailTextF;
 /********* 昵称 *********/
 @property (weak, nonatomic) IBOutlet UITextField *nameTextF;
+/********* 密码 *********/
+@property (weak, nonatomic) IBOutlet UITextField *pwdTextF;
 /********* 性别 *********/
 @property (weak, nonatomic) IBOutlet NJSexTextF *sexTextF;
 /********* 年龄 *********/
@@ -35,8 +39,8 @@
 - (IBAction)ageBtnClick:(UIButton *)sender;
 /********* 点击注册按钮 *********/
 - (IBAction)registerBtnClick;
-/********* senderSocket *********/
-@property(nonatomic,strong)GCDAsyncUdpSocket * sendSocket;
+/********* 会话管理者 *********/
+@property(nonatomic,strong)AFHTTPSessionManager * manager;
 
 @end
 
@@ -45,24 +49,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    dispatch_queue_t queue = dispatch_queue_create("Client", 0);
-    self.sendSocket = [[GCDAsyncUdpSocket alloc]initWithDelegate:self delegateQueue:queue];
-    NSError * error;
-    //绑定端口
-    [self.sendSocket bindToPort:NJClientLoginPort error:&error];
-    if(error)
-    {
-        NSLog(@"绑定端口失败");
-        NSLog(@"%@",error);
-    }
-    //开始接受数据
-    [self.sendSocket beginReceiving:nil];
 }
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    //隐藏导航栏
-    self.navigationController.navigationBar.hidden = YES;
+    //开启导航栏
+    self.navigationController.navigationBar.hidden = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
 }
 //懒加载
 - (NSArray *)sexArr
@@ -82,6 +75,14 @@
         _shadowView = shadowView;
     }
     return _shadowView;
+}
+- (AFHTTPSessionManager *)manager
+{
+    if(_manager == nil)
+    {
+        _manager = [AFHTTPSessionManager manager];
+    }
+    return _manager;
 }
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
@@ -125,59 +126,118 @@
 //点击注册按钮
 - (IBAction)registerBtnClick
 {
-    //将数据封装成包
-    //1.包头
-    Byte head2[] = {7,3};
-    //2.包内容
-    NSMutableDictionary * contentDicM = [NSMutableDictionary dictionary];
-    //2.1添加邮箱
-    [contentDicM setObject:self.emailTextF.text forKey:@"email"];
-    //2.2添加昵称
-    [contentDicM setObject:self.nameTextF.text forKey:@"userName"];
-    //2.3添加性别
-    [contentDicM setObject:self.sexTextF.text forKey:@"sex"];
-    //2.4添加年龄
-    [contentDicM setObject:[self.ageBtn titleForState:UIControlStateNormal] forKey:@"age"];
-    //2.5添加出生年月
-    [contentDicM setObject:[self.birthdayBtn titleForState:UIControlStateNormal] forKey:@"birthday"];
-    //2.6添加所在地
-    [contentDicM setObject:self.addressTextF.text forKey:@"address"];
-    //2.7判断能否转成json对象
-    if(![NSJSONSerialization isValidJSONObject:contentDicM])
+    //1.判断邮箱是否为空
+    if(!self.emailTextF.text.length)
     {
-        NSLog(@"%@不能转化成json",contentDicM);
+        //提示
+        [SVProgressHUD showErrorWithStatus:@"请输入您的邮箱"];
+        //用户未输入ID，出现键盘
+        [self.emailTextF becomeFirstResponder];
+        [SVProgressHUD dismissWithDelay:1.5];
         return;
     }
-    NSData * packetContentData = [NSJSONSerialization dataWithJSONObject:contentDicM options:kNilOptions error:nil];
-    //2.8注册内容长度
-    NSInteger contentLength = strlen([[NSString alloc]initWithData:packetContentData encoding:NSUTF8StringEncoding].UTF8String);
-    //3.包尾
-    //4.计算包长 = 8 + 账号长度 + 加密后的内容长度
-    int packetLength = (int)(8 + 1 + contentLength);
-    //5.拼接成包
-    //5.1头两个字节
-    NSMutableData * packetDataM = [NSMutableData dataWithBytes:head2 length:2];
-    //5.2账号长度
-    Byte accountLenB[] = {0};
-    [packetDataM appendBytes:accountLenB length:1];
-    //5.3账号
-    //5.4包长度
-    Byte packetLenB[] = {0,0,0,0};
-    NSLog(@"%i",(Byte)(packetLength & 0xff));
-    packetLenB[0] = (Byte)((packetLength >> 24) & 0xff);
-    packetLenB[1] = (Byte)((packetLength >> 16) & 0xff);
-    packetLenB[2] = (Byte)((packetLength >> 8) & 0xff);
-    packetLenB[3] = (Byte)(packetLength & 0xff);
-    [packetDataM appendBytes:packetLenB length:4];
-    //5.5注册内容
-    [packetDataM appendData:packetContentData];
-    //5.6添加包尾
-    NSString * packetTailStr = [NSString stringWithFormat:@"%d",NJPacketTail];
-    [packetDataM appendBytes:[[packetTailStr dataUsingEncoding:NSUTF8StringEncoding] bytes] length:1];
-    //6.发送数据
-    NSLog(@"要发送的数据:%@",packetDataM);
-    [self.sendSocket sendData:packetDataM toHost:NJServerIP port:NJServerPort withTimeout:50 tag:200];
-    //    [self.navigationController popViewControllerAnimated:YES];
+    //2.判断昵称是否为空
+    if(!self.nameTextF.text.length)
+    {
+        //提示
+        [SVProgressHUD showErrorWithStatus:@"请输入您的昵称"];
+        //用户未输入ID，出现键盘
+        [self.nameTextF becomeFirstResponder];
+        [SVProgressHUD dismissWithDelay:1.5];
+        return;
+    }
+    //3.判断密码是否为空
+    if(!self.pwdTextF.text.length)
+    {
+        //提示
+        [SVProgressHUD showErrorWithStatus:@"请输入您的密码"];
+        //用户未输入ID，出现键盘
+        [self.pwdTextF becomeFirstResponder];
+        [SVProgressHUD dismissWithDelay:1.5];
+        return;
+    }
+    //4.判断性别是否为空
+    if(!self.sexTextF.text.length)
+    {
+        //提示
+        [SVProgressHUD showErrorWithStatus:@"请输入您的性别"];
+        //用户未输入ID，出现键盘
+        [self.sexTextF becomeFirstResponder];
+        [SVProgressHUD dismissWithDelay:1.5];
+        return;
+    }
+    //5.判断出生年月是否为空
+    if(![self.birthdayBtn titleForState:UIControlStateNormal].length)
+    {
+        //提示
+        [SVProgressHUD showErrorWithStatus:@"请输入您的出生年月"];
+        //用户未输入ID，出现键盘
+        [self.birthdayBtn becomeFirstResponder];
+        [SVProgressHUD dismissWithDelay:1.5];
+        return;
+    }
+    //6.判断所在地是否为空
+    if(!self.addressTextF.text.length)
+    {
+        //提示
+        [SVProgressHUD showErrorWithStatus:@"请输入您的所在地"];
+        //用户未输入ID，出现键盘
+        [self.addressTextF becomeFirstResponder];
+        [SVProgressHUD dismissWithDelay:1.5];
+        return;
+    }
+    //参数字典
+    NSMutableDictionary * loginParamM = [NSMutableDictionary dictionary];
+    //1.邮箱
+    [loginParamM setObject:self.emailTextF.text forKey:@"mail"];
+    //2.昵称
+    [loginParamM setObject:self.nameTextF.text forKey:@"nick"];
+    //3.密码
+    //3.1密码加盐
+    NSString * pwdAfterAddSalt = [self.pwdTextF.text stringByAppendingString:NJSalt];
+    //3.2密码MD5加密
+    NSString * securePwd = [NSString md5String:pwdAfterAddSalt];
+    //3.3将加密后的密码加入字典
+    [loginParamM setObject:securePwd forKey:@"password"];
+    //4.性别
+    [loginParamM setObject:self.sexTextF.text forKey:@"sex"];
+    //5.出生年月
+    [loginParamM setObject:[self.birthdayBtn titleForState:UIControlStateNormal] forKey:@"birthday"];
+    //6.所在地
+    [loginParamM setObject:self.addressTextF.text forKey:@"address"];
+    //发送请求
+    //出现黑色幕布
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:@"正在注册中...."];
+    NSString * urlStr = [NJServiceHttp stringByAppendingPathComponent:NJRegisterPath];
+    NSLog(@"%@",urlStr);
+    [self.manager POST:urlStr parameters:loginParamM progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        if([responseObject[@"status"] intValue] < 0)
+        {
+            NSLog(@"%@",responseObject[@"inf"]);
+            NSString * info = responseObject[@"inf"];
+            //提示
+            [SVProgressHUD showErrorWithStatus:info];
+            //用户未输入ID，出现键盘
+            [self.emailTextF becomeFirstResponder];
+            [SVProgressHUD dismissWithDelay:1.5];
+            return;
+        }
+        NSLog(@"%@----%@",responseObject[@"status"], responseObject[@"inf"]);
+        [SVProgressHUD showErrorWithStatus:@"注册成功"];
+        [SVProgressHUD dismissWithDelay:1.5 completion:^{
+                        //返回登陆界面
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [SVProgressHUD showErrorWithStatus:@"网络错误"];
+        [SVProgressHUD dismissWithDelay:1.5];
+        if(error)
+        {
+            NSLog(@"%@",error);
+        }
+    }];
 }
 
 - (IBAction)ageBtnClick:(UIButton *)sender
@@ -190,18 +250,9 @@
     birthdayVC.birthdayDate = [self.birthdayBtn titleForState:UIControlStateNormal];
     [self.navigationController pushViewController:birthdayVC animated:YES];
 }
-#pragma mark - GCDAsyncUdpSocketDelegate方法
-//接收服务器返回的数据
-- (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext
+#pragma mark - UIGestureRecognizerDelegate方法
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-    NSLog(@"%@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
+    return YES;
 }
-- (void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error
-{
-    if(tag == 200)
-    {
-        NSLog(@"发送失败");
-    }
-}
-
 @end

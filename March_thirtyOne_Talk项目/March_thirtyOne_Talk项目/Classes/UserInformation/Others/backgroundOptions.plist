@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>optionName</key>
+		<string>获取邀请码</string>
+		<key>imageName</key>
+		<string>side</string>
+	</dict>
+	<dict>
+		<key>optionName</key>
+		<string>加入聊天组</string>
+		<key>imageName</key>
+		<string>side</string>
+	</dict>
+	<dict>
+		<key>optionName</key>
+		<string>退出聊天组</string>
+		<key>imageName</key>
+		<string>side</string>
+	</dict>
+</array>
+</plist>

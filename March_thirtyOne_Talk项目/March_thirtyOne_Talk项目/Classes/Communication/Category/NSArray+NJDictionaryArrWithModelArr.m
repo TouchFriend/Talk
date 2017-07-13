@@ -9,6 +9,7 @@
 #import "NSArray+NJDictionaryArrWithModelArr.h"
 #import "NJMessageFrame.h"
 #import "NSDictionary+NJDictionaryWithModel.h"
+#import "NJMessage.h"
 @implementation NSArray (NJDictionaryArrWithModelArr)
 //模型数组转字典数组
 + (NSArray *)dictionaryArrWithModelArr:(NSArray *)modeleArr
@@ -22,4 +23,5 @@
     }
     return dictionaryArr;
 }
+
 @end

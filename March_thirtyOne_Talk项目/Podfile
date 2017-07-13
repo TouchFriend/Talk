@@ -3,5 +3,5 @@ target ‘March_thirtyOne_Talk项目’ do
 	pod ‘AFNetworking’,’>3.0’
 	pod ‘MJExtension’,’>3.0’
 	pod ‘SVProgressHUD’,’>2.0’
-	pod ‘FMDB’,’>2.5’
+	pod ‘FMDB’,’>2.6’
 end

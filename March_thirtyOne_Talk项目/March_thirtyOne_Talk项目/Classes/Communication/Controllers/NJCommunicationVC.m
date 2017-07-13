@@ -16,6 +16,8 @@
 #import "NJTool.h"
 #import <AFNetworking.h>
 #import <SVProgressHUD.h>
+#import "NJDatabaseManager.h"
+#import <MJExtension.h>
 @interface NJCommunicationVC () <UITableViewDataSource,UITableViewDelegate,UITextViewDelegate,UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 /********* 聊天信息 *********/
@@ -24,8 +26,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomToolStrainterHeight;
 /********* 输入TextView *********/
 @property (weak, nonatomic) IBOutlet UITextView *inputTextView;
-/********* 沙盒路径 *********/
-@property(nonatomic,strong)NSString * pathStr;
 
 /********* 发送按钮 *********/
 @property (weak, nonatomic) IBOutlet UIButton *sendBtn;
@@ -39,10 +39,13 @@
 @property(nonatomic,assign)BOOL isOpenBurnAfterReading;
 /********* 会话管理者 *********/
 @property(nonatomic,strong)AFHTTPSessionManager * manager;
+/********* sqlite3数据库 *********/
+@property(nonatomic,strong)NJDatabaseManager * dbManager;
+
 @end
 
 @implementation NJCommunicationVC
-static NSString * ID = @"message";
+static NSString * const ID = @"message";
 - (void)viewDidLoad {
     [super viewDidLoad];
     //设置标题
@@ -57,6 +60,7 @@ static NSString * ID = @"message";
     self.tableView.delegate = self;
     //注册cell
     [self.tableView registerClass:[NJMessageCell class] forCellReuseIdentifier:ID];
+
     //隐藏分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //设置背景颜色
@@ -91,17 +95,13 @@ static NSString * ID = @"message";
 {
     if(_messageArrM == nil)
     {
-        if(![[NSFileManager defaultManager] fileExistsAtPath:self.pathStr])
-        {
-            [[NSFileManager defaultManager] createFileAtPath:self.pathStr contents:nil attributes:nil];
-            _messageArrM = [NSMutableArray array];
-            return _messageArrM;
-        }
-        //从沙盒路径中获取数据
-        NSArray * messageArr = [NSArray arrayWithContentsOfFile:self.pathStr];
+        //从数据库中获取全部聊天信息
+        NSArray * messageArr = [self.dbManager getAllmessages];
         NSMutableArray * messageArrM = [NSMutableArray array];
-        for (NSDictionary * dic in messageArr) {
-            NJMessage * message = [NJMessage messageWithDic:dic];
+        //字典转模型
+        NSArray * messageModelArr = [NJMessage mj_objectArrayWithKeyValuesArray:messageArr];
+        //转换成NJMessageFrame
+        for (NJMessage * message in messageModelArr) {
             //判断时间跟上一条消息是否相同，相同就隐藏
             NJMessageFrame * lastMessFrame = [messageArrM lastObject];
             if([lastMessFrame.message.time isEqualToString:message.time])
@@ -129,16 +129,13 @@ static NSString * ID = @"message";
     }
     return _manager;
 }
-- (NSString *)pathStr
+- (NJDatabaseManager *)dbManager
 {
-    if(_pathStr == nil)
+    if(_dbManager == nil)
     {
-        NSString * path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-        NSString * newPath = [path stringByAppendingPathComponent:@"messages.plist"];
-        NSLog(@"%@",newPath);
-        _pathStr = newPath;
+        _dbManager = [NJDatabaseManager defaultDatabaseManager];
     }
-    return _pathStr;
+    return _dbManager;
 }
 - (void)keyBoardWillShow:(NSNotification *)keyBoardNoti
 {
@@ -272,12 +269,12 @@ static NSString * ID = @"message";
     
 
 }
+//保存新增的聊天信息
 - (void)saveMessage:(NJMessage *)message
 {
     //7.创建NJMessageFrame模型
     NJMessageFrame * messageFrame = [[NJMessageFrame alloc]init];
     messageFrame.message = message;
-    
     //8.将数据模型到模型数组中
     [self.messageArrM addObject:messageFrame];
     //9.刷新表格
@@ -285,17 +282,10 @@ static NSString * ID = @"message";
     //10.清除数据
     self.inputTextView.text = @"";
     self.sendBtn.enabled = NO;
-    //11.将数据写入沙盒
-    [self saveMessagesTosandBox];
+    //11.将聊天信息写入数据库
+    [self.dbManager insertMessageWithMessageID:message];
     //12.拉到tableview的底部
     [self pullToTableBottom];
-}
-//将聊天信息写入沙盒中
-- (void)saveMessagesTosandBox
-{
-    //模型数组转字典数组
-    NSArray * dicArr = [NSArray dictionaryArrWithModelArr:self.messageArrM];
-    [dicArr writeToFile:self.pathStr atomically:YES];
 }
 - (NJMessage *)getMessage
 {
@@ -390,16 +380,12 @@ static NSString * ID = @"message";
                     //将数据添加到数据数组中
                     NSString * messageStr = (NSString *)message[@"message"];
                     NSDictionary * messageDic = [NSJSONSerialization JSONObjectWithData:[messageStr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NJMessage * getMessage = [NJMessage messageWithDic:messageDic];
+                    NJMessage * getMessage = [NJMessage mj_objectWithKeyValues:messageDic];
                     //设置消息ID
                     getMessage.MessageID = [message[@"id"]  integerValue];
                     NSLog(@"message---%@",getMessage);
-                    NJMessageFrame * messageFrame = [[NJMessageFrame alloc]init];
-                    messageFrame.message = getMessage;
-                    //将数据添加到数据数组中
-                    [self.messageArrM addObject:messageFrame];
-                    //将数据写入沙盒中
-                    [self saveMessagesTosandBox];
+                    //将消息保存到数据库中
+                    [self saveMessage:getMessage];
                     //刷新表格
                     [self.tableView reloadData];
                     //拉到tableview的底部

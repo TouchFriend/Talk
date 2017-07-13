@@ -11,6 +11,7 @@
 		BF0624E21E96761B001C77F5 /* UIImage+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = BF0624E11E96761B001C77F5 /* UIImage+Image.m */; };
 		BF0624E71E969809001C77F5 /* NJTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF0624E51E969809001C77F5 /* NJTableViewCell.m */; };
 		BF0624ED1E969D1C001C77F5 /* NJTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF0624EC1E969D1C001C77F5 /* NJTableViewCell.xib */; };
+		BF181D9B1ED31B8100CF9DEA /* NJDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BF181D9A1ED31B8100CF9DEA /* NJDatabaseManager.m */; };
 		BF2F11761E99E3CA00C1FE7E /* NSDictionary+NJDictionaryWithModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BF2F11751E99E3CA00C1FE7E /* NSDictionary+NJDictionaryWithModel.m */; };
 		BF2F11791E99E47900C1FE7E /* NSArray+NJDictionaryArrWithModelArr.m in Sources */ = {isa = PBXBuildFile; fileRef = BF2F11781E99E47900C1FE7E /* NSArray+NJDictionaryArrWithModelArr.m */; };
 		BF2F117C1E99EEFA00C1FE7E /* NJSexTextF.m in Sources */ = {isa = PBXBuildFile; fileRef = BF2F117B1E99EEFA00C1FE7E /* NJSexTextF.m */; };
@@ -70,6 +71,9 @@
 		BF0624E41E969809001C77F5 /* NJTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJTableViewCell.h; sourceTree = "<group>"; };
 		BF0624E51E969809001C77F5 /* NJTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NJTableViewCell.m; sourceTree = "<group>"; };
 		BF0624EC1E969D1C001C77F5 /* NJTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NJTableViewCell.xib; sourceTree = "<group>"; };
+		BF181D991ED31B8100CF9DEA /* NJDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJDatabaseManager.h; sourceTree = "<group>"; };
+		BF181D9A1ED31B8100CF9DEA /* NJDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NJDatabaseManager.m; sourceTree = "<group>"; };
+		BF181D9C1ED3D57900CF9DEA /* NJSingle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NJSingle.h; sourceTree = "<group>"; };
 		BF2F11741E99E3CA00C1FE7E /* NSDictionary+NJDictionaryWithModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+NJDictionaryWithModel.h"; sourceTree = "<group>"; };
 		BF2F11751E99E3CA00C1FE7E /* NSDictionary+NJDictionaryWithModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+NJDictionaryWithModel.m"; sourceTree = "<group>"; };
 		BF2F11771E99E47900C1FE7E /* NSArray+NJDictionaryArrWithModelArr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+NJDictionaryArrWithModelArr.h"; sourceTree = "<group>"; };
@@ -233,6 +237,48 @@
 				BFA0C6AC1E98A086007782BB /* NJMessageCell.m */,
 			);
 			name = messageCell;
+			sourceTree = "<group>";
+		};
+		BF6876041ED2D7E20086122E /* sqlite */ = {
+			isa = PBXGroup;
+			children = (
+				BF6876051ED2D7E20086122E /* Controllers */,
+				BF6876061ED2D7E20086122E /* Models */,
+				BF6876071ED2D7E20086122E /* Others */,
+				BF6876081ED2D7E20086122E /* Views */,
+			);
+			path = sqlite;
+			sourceTree = "<group>";
+		};
+		BF6876051ED2D7E20086122E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		BF6876061ED2D7E20086122E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BF6876071ED2D7E20086122E /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				BF181D9C1ED3D57900CF9DEA /* NJSingle.h */,
+				BF181D991ED31B8100CF9DEA /* NJDatabaseManager.h */,
+				BF181D9A1ED31B8100CF9DEA /* NJDatabaseManager.m */,
+			);
+			path = Others;
+			sourceTree = "<group>";
+		};
+		BF6876081ED2D7E20086122E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		BF72050F1E94D95D004F21C0 /* Friends */ = {
@@ -449,6 +495,7 @@
 				BF72050F1E94D95D004F21C0 /* Friends */,
 				BFFBF62E1E8F9B14008E0C4D /* UserInformation */,
 				BF93CF061E8E9D3E00EE73F0 /* Other */,
+				BF6876041ED2D7E20086122E /* sqlite */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -923,6 +970,7 @@
 				BFC69A1A1EA3BD11001E2E6B /* NSString+NJMD5String.m in Sources */,
 				BFA0C6B61E98BD45007782BB /* UIImage+NJResize.m in Sources */,
 				BFA0C6A21E9898D6007782BB /* NJMessage.m in Sources */,
+				BF181D9B1ED31B8100CF9DEA /* NJDatabaseManager.m in Sources */,
 				BF879CDF1EA9073C00E34A6A /* NJShowIconViewController.m in Sources */,
 				BF98EB841EA9AE2D002CE71D /* NSString+NJRegex.m in Sources */,
 				BF93CF051E8E9D3300EE73F0 /* NJLoginViewController.m in Sources */,

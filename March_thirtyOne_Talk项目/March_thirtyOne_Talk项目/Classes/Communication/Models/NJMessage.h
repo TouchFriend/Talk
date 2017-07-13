@@ -32,9 +32,4 @@ typedef enum {
 @property(nonatomic,assign)BOOL hasReaded;
 
 
-
-- (instancetype)initWithDic:(NSDictionary *)dic;
-+ (instancetype)messageWithDic:(NSDictionary *)dic;
-
-
 @end

@@ -9,16 +9,4 @@
 #import "NJMessage.h"
 
 @implementation NJMessage
-- (instancetype)initWithDic:(NSDictionary *)dic
-{
-    if(self = [super init])
-    {
-        [self setValuesForKeysWithDictionary:dic];
-    }
-    return self;
-}
-+ (instancetype)messageWithDic:(NSDictionary *)dic
-{
-    return [[self alloc]initWithDic:dic];
-}
 @end

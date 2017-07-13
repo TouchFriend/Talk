@@ -33,7 +33,7 @@
     [dicM setObject:@(message.MessageID) forKey:@"MessageID"];
     return dicM;
 }
-//模型转对象
+//模型转字典对象
 + (NSDictionary *)dictionaryWithMessageModel:(NJMessage *)message
 {
     NSMutableDictionary * dicM = [NSMutableDictionary dictionary];

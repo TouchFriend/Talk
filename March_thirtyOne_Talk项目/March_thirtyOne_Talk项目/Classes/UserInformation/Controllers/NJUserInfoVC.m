@@ -565,24 +565,24 @@ static NSString * bgOptionID = @"option";
 //    NSLog(@"---{%lf}",offsetP.x);
     //不用transform，是因为它只能改变x和y；
     //初始时不能左移
-    if(offsetP.x < 0 && mainViewFrame.origin.x == 0)
-    {
-        return ;
-    }
-    //右移后快速左移
-    if(offsetP.x < 0 && mainViewFrame.origin.x <= 0.1)
-    {
-        self.mainView.frame = [UIScreen mainScreen].bounds;
-        return ;
-    }
-    //到达右移最大x时停止右移
-    if(offsetP.x > 0 && mainViewFrame.origin.x >= NJRightTarget)
-    {
-        return;
-    }
+//    if(offsetP.x < 0 && mainViewFrame.origin.x == 0)
+//    {
+//        return ;
+//    }
+//    //右移后快速左移
+//    if(offsetP.x < 0 && mainViewFrame.origin.x <= 0.1)
+//    {
+//        self.mainView.frame = [UIScreen mainScreen].bounds;
+//        return ;
+//    }
+//    //到达右移最大x时停止右移
+//    if(offsetP.x > 0 && mainViewFrame.origin.x >= NJRightTarget)
+//    {
+//        return;
+//    }
     //添加蒙版
-    
     self.mainView.frame = [self frameWithOffsetX:offsetP.x];
+    NSLog(@"%lf",self.mainView.frame.origin.x);
     //1.计算backgroudView的x
     CGFloat x = -NJSideX * (NJRightTarget - self.mainView.frame.origin.x) / NJRightTarget;
     //2.给backgroudView的frame赋值
@@ -592,7 +592,7 @@ static NSString * bgOptionID = @"option";
     {
         float target  = 0;
         CGPoint velocity =  [panGesture velocityInView:self.mainView];
-        NSLog(@"-------%@",NSStringFromCGPoint(velocity));
+//        NSLog(@"-------%@",NSStringFromCGPoint(velocity));
         if(velocity.x >= 500)
         {
             target = NJRightTarget;
@@ -625,6 +625,14 @@ static NSString * bgOptionID = @"option";
 {
     CGRect mainFrame = self.mainView.frame;
     mainFrame.origin.x += offsetX;
+    if(mainFrame.origin.x <=0 )
+    {
+        mainFrame.origin.x = 0;
+    }
+    if(mainFrame.origin.x >= NJRightTarget)
+    {
+        mainFrame.origin.x = NJRightTarget;
+    }
     return mainFrame;
 }
 //根据x换回backgroudView的frame

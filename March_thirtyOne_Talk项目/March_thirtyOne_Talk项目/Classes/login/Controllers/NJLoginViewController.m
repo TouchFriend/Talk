@@ -157,36 +157,44 @@
     //2.拼接URL地址
     NSString * urlStr = [NJServiceHttp stringByAppendingPathComponent:NJLoginPath];
     NSLog(@"%@",urlStr);
-    //3.发送请求
-    [self.manager POST:urlStr parameters:parameterDicM progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if([responseObject[@"status"] intValue] < 0)
-        {
-            NSLog(@"%@",responseObject[@"inf"]);
-            NSString * info = responseObject[@"inf"];
-            //提示
-            [SVProgressHUD showErrorWithStatus:info];
-            [SVProgressHUD dismissWithDelay:1.5];
-            return;
-        }
-        NSLog(@"token:%@",responseObject[@"token"]);
-        [NJTool setToken:responseObject[@"token"]];
-        [SVProgressHUD dismissWithDelay:0.2 completion:^{
-            //保存用户偏好设置
-            NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults setObject:self.userIDTextF.text forKey:@"account"];
-            [userDefaults setObject:self.pwdTextF.text forKey:@"password"];
-            [userDefaults setBool:self.rmbPwdSwitch.on forKey:@"rmbPwd"];
-            [userDefaults setBool:self.autoLoginSwitch.on forKey:@"autoLogin"];
-            //保存数据
-            [userDefaults synchronize];
-            //跳到用户信息界面
-            NJUserInfoVC * userInfoVC = [[NJUserInfoVC alloc]init];
-            [self.navigationController pushViewController:userInfoVC animated:YES];
-        }];
-    }
-    failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [SVProgressHUD dismiss];
+    
+    [SVProgressHUD dismissWithDelay:0.2 completion:^{
+        NJUserInfoVC * userInfoVC = [[NJUserInfoVC alloc]init];
+        [self.navigationController pushViewController:userInfoVC animated:YES];
+
     }];
+    return;
+    
+//    //3.发送请求
+//    [self.manager POST:urlStr parameters:parameterDicM progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+//        if([responseObject[@"status"] intValue] < 0)
+//        {
+//            NSLog(@"%@",responseObject[@"inf"]);
+//            NSString * info = responseObject[@"inf"];
+//            //提示
+//            [SVProgressHUD showErrorWithStatus:info];
+//            [SVProgressHUD dismissWithDelay:1.5];
+//            return;
+//        }
+//        NSLog(@"token:%@",responseObject[@"token"]);
+//        [NJTool setToken:responseObject[@"token"]];
+//        [SVProgressHUD dismissWithDelay:0.2 completion:^{
+//            //保存用户偏好设置
+//            NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+//            [userDefaults setObject:self.userIDTextF.text forKey:@"account"];
+//            [userDefaults setObject:self.pwdTextF.text forKey:@"password"];
+//            [userDefaults setBool:self.rmbPwdSwitch.on forKey:@"rmbPwd"];
+//            [userDefaults setBool:self.autoLoginSwitch.on forKey:@"autoLogin"];
+//            //保存数据
+//            [userDefaults synchronize];
+//            //跳到用户信息界面
+//            NJUserInfoVC * userInfoVC = [[NJUserInfoVC alloc]init];
+//            [self.navigationController pushViewController:userInfoVC animated:YES];
+//        }];
+//    }
+//    failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+//        [SVProgressHUD dismiss];
+//    }];
 }
 //点击注册按钮
 - (IBAction)ResBtnClick

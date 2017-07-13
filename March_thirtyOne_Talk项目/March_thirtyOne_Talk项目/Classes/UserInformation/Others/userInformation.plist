@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>name</key>
+		<string>邮箱</string>
+		<key>content</key>
+		<string>123456789@qq.com</string>
+	</dict>
+	<dict>
+		<key>name</key>
+		<string>昵称</string>
+		<key>content</key>
+		<string>Flydog Father</string>
+	</dict>
+	<dict>
+		<key>name</key>
+		<string>性别</string>
+		<key>content</key>
+		<string>男</string>
+	</dict>
+	<dict>
+		<key>name</key>
+		<string>年龄</string>
+		<key>content</key>
+		<string>22</string>
+	</dict>
+	<dict>
+		<key>name</key>
+		<string>出生年月</string>
+		<key>content</key>
+		<string>1996-12-13</string>
+	</dict>
+	<dict>
+		<key>name</key>
+		<string>所在地</string>
+		<key>content</key>
+		<string>福建省福州市</string>
+	</dict>
+</array>
+</plist>

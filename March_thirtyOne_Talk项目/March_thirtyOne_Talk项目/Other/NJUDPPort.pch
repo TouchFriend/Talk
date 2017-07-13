@@ -1,0 +1,13 @@
+//
+//  NJUDPPort.pch
+//  March_thirtyOne_Talk项目
+//
+//  Created by TouchWorld on 2017/4/9.
+//  Copyright © 2017年 cxz. All rights reserved.
+//
+#define NJClientLoginPort 17172
+#define NJClientRegistPort 17170
+#define NJServerPort 17173
+#define NJServerIP @"192.168.16.241"
+#define NJSalt @"315315315"
+#define NJPacketTail 8

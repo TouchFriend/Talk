@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>icon</key>
+		<string>me</string>
+		<key>senderName</key>
+		<string>cxz</string>
+		<key>text</key>
+		<string>喂，2B！</string>
+		<key>time</key>
+		<string>前天 10:27</string>
+		<key>type</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>me</string>
+		<key>senderName</key>
+		<string>cxz</string>
+		<key>text</key>
+		<string>问你个严肃的事</string>
+		<key>time</key>
+		<string>前天 10:27</string>
+		<key>type</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>other</string>
+		<key>senderName</key>
+		<string>沈金宝</string>
+		<key>text</key>
+		<string>你妹夫啊，你才2B！说，什么事？你妹夫啊，你才2B！说，什么事？你妹夫啊，你才2B！说，什么事？你妹夫啊，你才2B！说，什么事？</string>
+		<key>time</key>
+		<string>昨天 20:05</string>
+		<key>type</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>other</string>
+		<key>senderName</key>
+		<string>沈金宝</string>
+		<key>text</key>
+		<string>你妹夫啊，你才2B！说，什么事？你妹夫啊，你才2B！说，什么事？你妹夫啊，你才2B！说，什么事？你妹夫啊，你才2B！说，什么事？</string>
+		<key>time</key>
+		<string>昨天 20:05</string>
+		<key>type</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>me</string>
+		<key>senderName</key>
+		<string>czczc</string>
+		<key>text</key>
+		<string>你姐夫啊，我就想问下：你是不是我最好的朋友？</string>
+		<key>time</key>
+		<string>昨天 20:07</string>
+		<key>type</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>me</string>
+		<key>senderName</key>
+		<string>篮球之神</string>
+		<key>text</key>
+		<string>heheehehheh</string>
+		<key>time</key>
+		<string>昨天 20:07</string>
+		<key>type</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>icon</key>
+		<string>me</string>
+		<key>senderName</key>
+		<string>cxz</string>
+		<key>text</key>
+		<string>你姐夫啊，我就想问下：你是不是我最好的朋友？你姐夫啊，我就想问下：你是不是我最好的朋友？你姐夫啊，我就想问下：你是不是我最好的朋友？你姐夫啊，我就想问下：你是不是我最好的朋友？</string>
+		<key>time</key>
+		<string>昨天 20:07</string>
+		<key>type</key>
+		<integer>0</integer>
+	</dict>
+</array>
+</plist>

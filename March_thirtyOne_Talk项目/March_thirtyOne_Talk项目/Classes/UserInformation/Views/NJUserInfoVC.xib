@@ -18,6 +18,7 @@
                 <outlet property="bottomToolHeightContraint" destination="f4X-5Y-G8R" id="NDs-SD-1D9"/>
                 <outlet property="communicationBtn" destination="Tl0-8f-nrn" id="7Aa-p6-5pk"/>
                 <outlet property="mainView" destination="OMt-gq-lT2" id="ecu-FY-PGv"/>
+                <outlet property="maskView" destination="TzH-9A-NKQ" id="zDf-dr-kzb"/>
                 <outlet property="tableView" destination="yRp-4h-hL7" id="Fn7-Vf-b2L"/>
                 <outlet property="userIcon" destination="h6f-q8-Sag" id="XI4-tK-cbt"/>
                 <outlet property="userNameLabel" destination="isd-Rt-ddW" id="JbO-un-gex"/>
@@ -168,16 +169,24 @@
                                 <action selector="setterBtnClick:" destination="-1" eventType="touchUpInside" id="sMv-BT-I0u"/>
                             </connections>
                         </button>
+                        <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TzH-9A-NKQ" userLabel="maskView">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <gestureRecognizers/>
                     <constraints>
+                        <constraint firstItem="TzH-9A-NKQ" firstAttribute="leading" secondItem="OMt-gq-lT2" secondAttribute="leading" id="1st-Hz-kCQ"/>
                         <constraint firstItem="qdi-Xj-BOO" firstAttribute="leading" secondItem="OMt-gq-lT2" secondAttribute="leading" id="3Qt-pg-4dq"/>
                         <constraint firstItem="sUx-w2-Xqs" firstAttribute="top" secondItem="OMt-gq-lT2" secondAttribute="top" constant="30" id="4fT-3F-KOd"/>
                         <constraint firstItem="yRp-4h-hL7" firstAttribute="leading" secondItem="OMt-gq-lT2" secondAttribute="leading" id="615-4S-jxI"/>
+                        <constraint firstAttribute="trailing" secondItem="TzH-9A-NKQ" secondAttribute="trailing" id="6dN-Aw-Ihz"/>
                         <constraint firstAttribute="bottom" secondItem="yRp-4h-hL7" secondAttribute="bottom" id="6yb-kH-toT"/>
+                        <constraint firstAttribute="bottom" secondItem="TzH-9A-NKQ" secondAttribute="bottom" id="8jH-y6-AkO"/>
                         <constraint firstItem="hUI-1Z-MAX" firstAttribute="top" secondItem="OMt-gq-lT2" secondAttribute="top" id="9Tm-Y6-9YA"/>
                         <constraint firstAttribute="trailing" secondItem="oEf-nz-d7M" secondAttribute="trailing" id="Cdh-mW-kDp"/>
+                        <constraint firstItem="TzH-9A-NKQ" firstAttribute="top" secondItem="OMt-gq-lT2" secondAttribute="top" id="CrW-Bl-GXW"/>
                         <constraint firstItem="oHL-Gz-sIY" firstAttribute="leading" secondItem="OMt-gq-lT2" secondAttribute="leading" id="F8N-p2-spC"/>
                         <constraint firstAttribute="trailing" secondItem="oHL-Gz-sIY" secondAttribute="trailing" id="HCE-6K-vHl"/>
                         <constraint firstItem="gS4-cE-NST" firstAttribute="leading" secondItem="OMt-gq-lT2" secondAttribute="leading" id="Owp-Fb-wo3"/>

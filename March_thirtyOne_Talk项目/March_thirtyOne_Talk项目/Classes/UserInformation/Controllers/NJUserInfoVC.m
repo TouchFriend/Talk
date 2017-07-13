@@ -62,7 +62,8 @@
 /********* 底部聊天按钮条的高度约束 *********/
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomToolHeightContraint;
 - (IBAction)setterBtnClick:(id)sender;
-
+/********* 蒙版 *********/
+@property (weak, nonatomic) IBOutlet UIView *maskView;
 
 @end
 
@@ -562,27 +563,10 @@ static NSString * bgOptionID = @"option";
 {
     CGPoint offsetP = [panGesture translationInView:self.mainView];
     CGRect mainViewFrame = self.mainView.frame;
-//    NSLog(@"---{%lf}",offsetP.x);
-    //不用transform，是因为它只能改变x和y；
-    //初始时不能左移
-//    if(offsetP.x < 0 && mainViewFrame.origin.x == 0)
-//    {
-//        return ;
-//    }
-//    //右移后快速左移
-//    if(offsetP.x < 0 && mainViewFrame.origin.x <= 0.1)
-//    {
-//        self.mainView.frame = [UIScreen mainScreen].bounds;
-//        return ;
-//    }
-//    //到达右移最大x时停止右移
-//    if(offsetP.x > 0 && mainViewFrame.origin.x >= NJRightTarget)
-//    {
-//        return;
-//    }
-    //添加蒙版
+    //设置mainView的frame
     self.mainView.frame = [self frameWithOffsetX:offsetP.x];
-    NSLog(@"%lf",self.mainView.frame.origin.x);
+    //添加蒙版
+    self.maskView.alpha = self.mainView.frame.origin.x / NJRightTarget * 0.5;
     //1.计算backgroudView的x
     CGFloat x = -NJSideX * (NJRightTarget - self.mainView.frame.origin.x) / NJRightTarget;
     //2.给backgroudView的frame赋值

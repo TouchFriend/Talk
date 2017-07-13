@@ -539,7 +539,7 @@ static NSString * bgOptionID = @"option";
         [self.communicationBtn setTitle:@"加入聊天组" forState: UIControlStateNormal];
     }
 }
-//添加手势
+#pragma mark - 手势相关
 - (void)addGesture
 {
     //1.添加平移手势
@@ -565,7 +565,7 @@ static NSString * bgOptionID = @"option";
     CGRect mainViewFrame = self.mainView.frame;
     //设置mainView的frame
     self.mainView.frame = [self frameWithOffsetX:offsetP.x];
-    //添加蒙版
+    //修改蒙版的透明度
     self.maskView.alpha = self.mainView.frame.origin.x / NJRightTarget * 0.5;
     //1.计算backgroudView的x
     CGFloat x = -NJSideX * (NJRightTarget - self.mainView.frame.origin.x) / NJRightTarget;
@@ -588,6 +588,8 @@ static NSString * bgOptionID = @"option";
         CGFloat offsetX = target - self.mainView.frame.origin.x;
         [UIView animateWithDuration:0.5 animations:^{
             self.mainView.frame = [self frameWithOffsetX:offsetX];
+            //修改蒙版的透明度
+            self.maskView.alpha = self.mainView.frame.origin.x / NJRightTarget * 0.5;
             self.backgroundView.frame = [self backgroundframeWithX:0];
         }];
     }
@@ -599,6 +601,8 @@ static NSString * bgOptionID = @"option";
     //复原
     [UIView animateWithDuration:0.2 animations:^{
         self.mainView.frame = self.view.frame;
+        //修改蒙版的透明度
+        self.maskView.alpha = self.mainView.frame.origin.x / NJRightTarget * 0.5;
     }];
     
 }
@@ -657,6 +661,8 @@ static NSString * bgOptionID = @"option";
     bgViewFrame.origin.x = 0;
     [UIView animateWithDuration:0.25 animations:^{
         self.mainView.frame = mainViewFrame;
+        //修改蒙版的透明度
+        self.maskView.alpha = self.mainView.frame.origin.x / NJRightTarget * 0.5;
         self.backgroundView.frame = bgViewFrame;
     }];
 }
